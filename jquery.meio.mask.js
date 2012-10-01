@@ -322,7 +322,9 @@
                 var $this = $(this), dataObj = $this.data('mask');
                 dataObj.inputFocusValue = $this.val();
                 dataObj.changed = false;
-                if (dataObj.selectCharsOnFocus) $this.select();
+                if (dataObj.selectCharsOnFocus) {
+                  setTimeout(function() { $this.select(); }, 50);
+                }
             },
 
             _onBlur: function(e) {
