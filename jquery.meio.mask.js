@@ -33,8 +33,6 @@
 
 (function($) {
 
-    var isIphone = (window.orientation != null);
-
     // browsers like firefox2 and before and opera doesnt have the onPaste event, but the paste feature can be done with the onInput event.
     var pasteEvent = (($.browser.opera || ($.browser.mozilla && parseFloat($.browser.version.substr(0,3)) < 1.9)) ? 'input' : 'paste');
 
@@ -103,11 +101,6 @@
                 224  : 'command'
             },
 
-            iphoneKeyRepresentation: {
-                10    : 'go',
-                127   : 'delete'
-            },
-
             signals: {
                 '+' : '',
                 '-' : '-'
@@ -160,7 +153,7 @@
                 if (!this.hasInit) {
 
                     var self = this, i,
-                        keyRep = (isIphone) ? this.iphoneKeyRepresentation : this.keyRepresentation;
+                        keyRep = this.keyRepresentation;
 
                     this.ignore = false;
 
@@ -168,7 +161,7 @@
                     for (i=0; i<=9; i++) this.rules[i] = new RegExp('[0-'+i+']');
 
                     this.keyRep = keyRep;
-                    // ignore keys array creation for iphone or the normal ones
+                    // ignore keys array creation
                     this.ignoreKeys = [];
                     $.each(keyRep,function(key) {
                         self.ignoreKeys.push(parseInt(key, 10));
@@ -358,13 +351,12 @@
             },
 
             _onKeyDown: function(e,o) {
-                // lets say keypress at desktop == keydown at iphone (theres no keypress at iphone)
                 this.ignore = $.inArray(o.nKey, this.ignoreKeys) > -1 || e.ctrlKey || e.metaKey || e.altKey;
                 if (this.ignore) {
                     var rep = this.keyRep[o.nKey];
                     o.data.onValid.call(o._this, rep || '', o.nKey);
                 }
-                return isIphone ? this._onKeyPress(e, o) : true;
+                return true;
             },
 
             _onKeyUp: function(e, o) {
